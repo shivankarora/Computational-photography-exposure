@@ -95,41 +95,4 @@ Such disparity leads to a process called Gamma correction.
 You may find that directly displaying a linear RGB image on screen will typically lead to a very dark image.
 A simple solution is to map pixel intensities from `x` to x->x<sup>1/2.2</sup>, so that the image will be roughly converted to an sRGB image that suits your display. Before you do that, make sure your image already has a reasonable `exposure value`. An easy way to do that is scaling the image so that the average intensity (over all pixels, R, G and B) is some value like 0.18.
 
-Another benefit of such 1/2.2 Gamma correction for sRPG is better preservation of information for the human visual system. Human eyes have a logarithmic perception and are more sensitive to low-light regions. Storing a boosted value for low light in 1/2.2 gamma actually gives you more bits there, which alleviates quantization in low-light parts.
 
-Google `linear workflow` if you are interested in more details. You may find useful information such as [this](http://cgalter.com/understanding-linear-workflow/).
-
-**Why linearize the image:** `Exposure` is designed to ba an end-to-end photo-processing system. The input should be a RAW file (linear image, after [`demosaicing`](https://en.wikipedia.org/wiki/Demosaicing)). However, the data from the dataset are in Adobe DNG formats, making reading them hard in a third-party program. That's why we export the data in ProPhoto RGB color space, which is close to sRGB while having a roughly `1/1.8` Gamma instead of `1/2.2`. Then we do linearization here to make the inputs linear.
-
-**I tried to change the Gamma parameter from 1.0 to 2.2, the results differ a lot:** If you do this change, make sure the training input and testing input are changed simultaneously. There is no good reason a deep learning system on linear images will work on Gamma-corrected ones, unless you do data augmentation on input image Gamma.
-
-<!---
-3) **Does retouching (post-processing) mean fabricating something fake? I prefer the jpg output images from my camera, which are true, realistic, and unmodified.**
-Modern digital cameras have a built-in long post-processing pipeline. From the lens to the ultimate jpg image you get, lots of operations happen, such as A/D conversion, demosaicing, white balancing, denoising, AA/sharpening, tone mapping/Gamma correction etc., just to convert the sensor activation to display-ready photos.
-"The jpg output images" are not necessarily unmodified. In fact, they are heavily processed results from the sensor. They can not even be considered realistic, as the built-in color constancy algorithm may not have done a perfect job and the resulting white balance may not accurately reflect what the photographer observes.
-Note that perfectly reproducing what you see on the display is hardly possible, due to hardware limits of your cameras and displays. Retouching from RAWs does not always mean fabricating something - the photographer just needs to do it to render better what he sees and feels when he was taking the photo. Without post-processing, the binary bits from the camera sensors are not very useful, at least to human eyes. --->
-
-6) **How is human performance collected?**
-
-We developed a [photo-editing UI](https://github.com/yuanming-hu/exposure/tree/master/user_study_ui) to let humans play the same game as our RL agent, and recorded [a video tutorial](https://www.youtube.com/watch?v=DwDRgHVZIXw&feature=youtu.be) to teach our volunteers how to use it.
-<img src="web/images/ui.jpg" width="800">
-
-# Bibtex
-```
-@article{hu2018exposure,
-  title={Exposure: A White-Box Photo Post-Processing Framework},
-  author={Hu, Yuanming and He, Hao and Xu, Chenxi and Wang, Baoyuan and Lin, Stephen},
-  journal={ACM Transactions on Graphics (TOG)},
-  volume={37},
-  number={2},
-  pages={26},
-  year={2018},
-  publisher={ACM}
-}
-```
-
-# Related Research Projects and Implementations 
- - [Pix2pix and CycleGAN](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix)
- - [WGAN-tensorflow](https://github.com/Zardinality/WGAN-tensorflow)
- - [HDR Net](https://github.com/mgharbi/hdrnet)
- - ...

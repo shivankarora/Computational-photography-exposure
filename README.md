@@ -78,21 +78,4 @@ I did. We have some internal projects (which I cannot disclose right now, sorry)
 In the paper, you will find that the system is learning a one-to-many mapping, instead of one-to-one.
 The one-to-many mapping mechanism is achieved using (random) dropout (instead of noise vectors in some other GAN papers), and therefore you may get slightly different results every time.
 
-4) **Pre-trained model?**
-
-The repository contains a submodule with the pretrained model on the MIT-Adobe Five-K dataset. Please make sure you clone the repo **recursively**:
-```
-git clone https://github.com/yuanming-hu/exposure --recursive
-``` 
-
-We also have pre-trained model for the two artists mentioned in the paper. However, to avoid copyright issues we might not release it in public. Please email Yuanming Hu if you want these models.
-
-5) **Why linearize the photos? I changed the Gamma parameter from 1.0 to 2.2, the results differ a lot.**
-
-**A bit background:** the sensor of digital cameras have almost linear activation curves. This means if one pixel receives twice photons it will give you twice as large value (activation). However, it is not the case for displays, which as a nonlinear activation, roughly x->x<sup>2.2</sup>, which means a twice as large value will result in 4.6 times brighter pixel when displayed. That's why [sRGB](https://en.wikipedia.org/wiki/SRGB) color space has a ~1/2.2 gamma, which makes color activations stored in this color space ready-to-display on a CRT display as it inverts such nonlinearity. Though we no longer use CRT displays nowadays, modern LCD displays still follow this convention. 
-
-Such disparity leads to a process called Gamma correction.
-You may find that directly displaying a linear RGB image on screen will typically lead to a very dark image.
-A simple solution is to map pixel intensities from `x` to x->x<sup>1/2.2</sup>, so that the image will be roughly converted to an sRGB image that suits your display. Before you do that, make sure your image already has a reasonable `exposure value`. An easy way to do that is scaling the image so that the average intensity (over all pixels, R, G and B) is some value like 0.18.
-
 
